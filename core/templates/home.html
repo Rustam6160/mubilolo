@@ -1,0 +1,29 @@
+<h1>🎁 Идеи подарков</h1>
+{% if user.is_authenticated %}
+    <p>Привет, {{ user.username }} | <a href="{% url 'logout' %}">Выйти</a></p>
+    <p><a href="{% url 'add_gift' %}">➕ Добавить подарок</a></p>
+{% else %}
+    <p><a href="{% url 'login' %}">Войти</a> или <a href="{% url 'register' %}">зарегистрироваться</a></p>
+{% endif %}
+
+<form method="get" action="">
+    <input type="text" name="q" placeholder="Поиск по подаркам..." value="{{ query|default:'' }}">
+    <button type="submit">🔍</button>
+</form>
+
+
+<ul>
+  {% for gift in gifts %}
+    <li>
+      <strong>{{ gift.title }}</strong> — для {{ gift.for_whom }}<br>
+      {{ gift.description }}<br>
+      {% if gift.link %}<a href="{{ gift.link }}" target="_blank">Ссылка</a>{% endif %}
+      {% if user.is_authenticated %}
+        | <a href="{% url 'edit_gift' gift.pk %}">✏️</a>
+        | <a href="{% url 'delete_gift' gift.pk %}">🗑️</a>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>Нет подарков 😢</li>
+  {% endfor %}
+</ul>
